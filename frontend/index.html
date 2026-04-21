@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PCAP Analyzer</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>PCAP Analyzer</h1>
+    <p class="subtitle">Upload a PCAP file and visualize network traffic insights.</p>
+
+    <div class="upload-box">
+      <input type="file" id="pcapFile" accept=".pcap" />
+      <button id="uploadBtn">Analyze</button>
+    </div>
+
+    <div id="status"></div>
+
+    <div id="results" class="hidden">
+      <div class="cards">
+        <div class="card">
+          <h3>Total Packets</h3>
+          <p id="totalPackets">0</p>
+        </div>
+      </div>
+
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h3>Protocol Distribution</h3>
+          <canvas id="protocolChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+          <h3>Top Source IPs</h3>
+          <canvas id="sourceIpChart"></canvas>
+        </div>
+
+        <div class="chart-card">
+          <h3>Top Destination IPs</h3>
+          <canvas id="destinationIpChart"></canvas>
+        </div>
+      </div>
+
+      <div class="table-section">
+        <div class="table-card">
+          <h3>Top Ports</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Port</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody id="topPortsTable"></tbody>
+          </table>
+        </div>
+
+        <div class="table-card">
+          <h3>Flagged Ports</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Port</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody id="flaggedPortsTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
