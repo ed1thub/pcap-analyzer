@@ -9,21 +9,53 @@
 </head>
 <body>
   <div class="container">
-    <h1>PCAP Analyzer</h1>
-    <p class="subtitle">Upload a PCAP file and visualize network traffic insights.</p>
-
-    <div class="upload-box">
-      <input type="file" id="pcapFile" accept=".pcap" />
-      <button id="uploadBtn">Analyze</button>
+    <div class="hero">
+      <div>
+        <h1>PCAP Analyzer</h1>
+        <p class="subtitle">Upload a PCAP capture and get a fast, analyst-friendly traffic summary.</p>
+      </div>
+      <span class="app-tag">Network Forensics</span>
     </div>
 
-    <div id="status"></div>
+    <div class="upload-box">
+      <input type="file" id="pcapFile" accept=".pcap,.pcapng" />
+      <button id="uploadBtn">Analyze Capture</button>
+    </div>
+
+    <div id="status" class="status status-neutral" role="status" aria-live="polite">Ready for analysis.</div>
 
     <div id="results" class="hidden">
       <div class="cards">
-        <div class="card">
+        <div class="card metric-card">
           <h3>Total Packets</h3>
           <p id="totalPackets">0</p>
+        </div>
+
+        <div class="card metric-card">
+          <h3>TCP Share</h3>
+          <p id="tcpPercentage">0%</p>
+        </div>
+
+        <div class="card metric-card">
+          <h3>UDP Share</h3>
+          <p id="udpPercentage">0%</p>
+        </div>
+      </div>
+
+      <div class="summary-box">
+        <h3>Analyst Summary</h3>
+        <p id="analystSummary">Run an analysis to generate a quick narrative summary.</p>
+        <ul class="summary-list" id="analystDetails">
+          <li id="detailProtocol">Dominant protocol: N/A.</li>
+          <li id="detailSource">Busiest source host: N/A.</li>
+          <li id="detailDestination">Busiest destination host: N/A.</li>
+          <li id="detailUnusualPorts">Unusual ports observed: N/A.</li>
+          <li id="detailRiskNote">Quick risk note: N/A.</li>
+        </ul>
+        <div class="summary-meta">
+          <span id="riskLevel" class="meta-chip">Risk: N/A</span>
+          <span id="topProtocol" class="meta-chip">Top Protocol: N/A</span>
+          <span id="dominantPort" class="meta-chip">Dominant Port: N/A</span>
         </div>
       </div>
 
@@ -52,6 +84,7 @@
               <tr>
                 <th>Port</th>
                 <th>Count</th>
+                <th>Service</th>
               </tr>
             </thead>
             <tbody id="topPortsTable"></tbody>
@@ -65,6 +98,8 @@
               <tr>
                 <th>Port</th>
                 <th>Count</th>
+                <th>Context</th>
+                <th>Severity</th>
               </tr>
             </thead>
             <tbody id="flaggedPortsTable"></tbody>

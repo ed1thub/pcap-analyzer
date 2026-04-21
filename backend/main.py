@@ -1,11 +1,21 @@
+from pathlib import Path
+
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 import os
 import shutil
 
 from analyzer import analyze_pcap
 
 app = FastAPI(title="PCAP Analyzer")
+
+BASE_DIR = Path(__file__).resolve().parent
+FRONTEND_DIR = BASE_DIR.parent / "frontend"
+UPLOAD_DIR = BASE_DIR / "uploads"
+
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 app.add_middleware(
     CORSMiddleware,
@@ -15,13 +25,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-UPLOAD_DIR = "uploads"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-
 
 @app.get("/")
 def root():
-    return {"message": "PCAP Analyzer backend is running"}
+    return FileResponse(FRONTEND_DIR / "index.html")
 
 
 @app.post("/upload")
@@ -41,3 +48,6 @@ def upload_pcap(file: UploadFile = File(...)):
         "status": "uploaded successfully",
         "analysis": results
     }
+
+
+app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
