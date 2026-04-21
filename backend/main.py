@@ -1,7 +1,9 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import shutil
+
+from analyzer import analyze_pcap
 
 app = FastAPI(title="PCAP Analyzer")
 
@@ -24,12 +26,18 @@ def root():
 
 @app.post("/upload")
 def upload_pcap(file: UploadFile = File(...)):
+    if not file.filename.endswith(".pcap"):
+        raise HTTPException(status_code=400, detail="Only .pcap files are allowed")
+
     file_path = os.path.join(UPLOAD_DIR, file.filename)
 
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
+    results = analyze_pcap(file_path)
+
     return {
         "filename": file.filename,
-        "status": "uploaded successfully"
+        "status": "uploaded successfully",
+        "analysis": results
     }
