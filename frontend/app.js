@@ -41,7 +41,7 @@ let currentFilename = "analysis";
 let selectedProtocol = "ALL";
 let selectedIp = null;
 
-const apiBaseUrl = window.location.port === "8000" ? "" : "http://127.0.0.1:8000";
+const apiBaseUrl = "";
 
 uploadBtn.addEventListener("click", async () => {
   const file = fileInput.files[0];
