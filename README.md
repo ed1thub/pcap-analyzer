@@ -1,95 +1,168 @@
 # PCAP Analyzer
 
-A web-based network traffic analyzer that accepts packet captures and returns actionable insights through a FastAPI backend and a browser dashboard.
+PCAP Analyzer is a deployable web application for packet-capture analysis. It provides a FastAPI backend, a browser dashboard, and export workflows for JSON, HTML, and PDF reports.
 
-## What It Does
+## Features
 
-- Uploads a capture file and parses packets with Scapy
-- Calculates traffic metrics such as total packet count and TCP/UDP share
-- Shows top source and destination IP hosts
-- Visualizes protocol and host distribution with charts
-- Highlights suspicious or unusual destination ports with severity labels
-- Generates an Analyst Summary in plain English with a quick risk note
+- Upload .pcap and .pcapng captures
+- Protocol metrics (TCP/UDP share, protocol distribution)
+- Host and conversation analysis (top source/destination IPs, top pairs)
+- Port intelligence (top ports, suspicious ports, port class distribution)
+- Traffic scope analytics (internal/external, multicast, broadcast)
+- Packet size statistics (avg, p50, p95)
+- Analyst Summary panel with risk context
+- Exports: JSON, HTML report, PDF report (no popup flow)
 
 ## Architecture
 
-- Single-process app: frontend and backend are served together by FastAPI
-- Backend: packet parsing and analysis logic in `backend/analyzer.py`
-- API server and static file serving in `backend/main.py`
-- Frontend dashboard in `frontend/` (HTML, CSS, JS + Chart.js)
+```mermaid
+flowchart LR
+		U[Browser UI] -->|Upload capture| API[FastAPI /upload]
+		API --> AN[Scapy Analyzer]
+		AN --> API
+		API -->|JSON analysis| U
+		API -->|Serve static files| U
 
-## Run The App
+		subgraph App Container
+			API
+			AN
+			FE[Frontend assets]
+		end
 
-From the project root:
+		FE --> API
+```
+
+## Project Layout
+
+- backend/main.py: API entrypoint and static-file serving
+- backend/analyzer.py: packet parsing and analysis logic
+- backend/requirements.txt: Python dependencies
+- frontend/index.html: dashboard structure
+- frontend/app.js: UI logic and export actions
+- frontend/styles.css: dashboard styling
+- run.sh: local launcher
+- Dockerfile: production container build
+
+## Local Run
+
+From repository root:
 
 ```bash
 ./run.sh
 ```
 
-Default bind:
-
-- Host: `0.0.0.0`
-- Port: `8000`
-
-Open in browser:
+Open:
 
 ```text
 http://127.0.0.1:8000
 ```
 
-or from another device on your network:
-
-```text
-http://<your-machine-ip>:8000
-```
-
-Custom host/port:
+Optional host/port override:
 
 ```bash
 HOST=0.0.0.0 PORT=8080 ./run.sh
 ```
 
-Stop the app with `Ctrl+C`.
+## Docker Deployment
 
-## File Support
+Build image:
 
-- Backend currently accepts `.pcap` uploads via `/upload`.
+```bash
+docker build -t pcap-analyzer:latest .
+```
+
+Run container:
+
+```bash
+docker run --rm -p 8000:8000 --name pcap-analyzer pcap-analyzer:latest
+```
+
+Open:
+
+```text
+http://127.0.0.1:8000
+```
+
+## Docker Compose
+
+Run with Compose:
+
+```bash
+docker compose up --build
+```
+
+Stop:
+
+```bash
+docker compose down
+```
+
+The Compose setup mounts a named volume for `backend/uploads` so uploaded files persist across container restarts.
+
+## Render Deployment
+
+This repository includes a Render Blueprint file at `render.yaml`.
+
+### Option 1: Blueprint (recommended)
+
+- Push this repository to GitHub
+- In Render, create a new Blueprint instance from the repository
+- Render reads `render.yaml` and provisions the web service automatically
+
+### Option 2: Manual web service
+
+- Runtime: Python
+- Build Command: `pip install -r backend/requirements.txt`
+- Start Command: `cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT`
+- Health Check Path: `/healthz`
+
+### Render Deployment Checklist
+
+- Repository pushed to GitHub with `Dockerfile` and `render.yaml`
+- App boots locally with `./run.sh`
+- Health endpoint responds at `/healthz`
+- Upload path `backend/uploads` is writable at runtime
+- Test one upload in production after first deploy
 
 ## API
 
-### `POST /upload`
+### GET /healthz
 
-Upload form field:
+- Returns: `{ "status": "ok" }`
+- Use this endpoint for infrastructure health checks
 
-- `file` (PCAP file)
+### POST /upload
 
-Response includes:
+Form field:
 
-- `total_packets`
-- `tcp_percentage`
-- `udp_percentage`
-- `top_source_ips`
-- `top_destination_ips`
-- `protocol_distribution`
-- `top_ports` (with service label)
-- `flagged_ports` (with context + severity)
+- file: capture file (.pcap or .pcapng)
 
-## Dashboard Highlights
+Response highlights:
 
-- KPI cards for total packets, TCP share, UDP share
-- Analyst Summary panel with dominant protocol, busiest source host, busiest destination host, unusual ports observed, and a quick risk note
-- Loading, success, and error status states
-- Flagged ports table with severity badges (high/medium/low)
+- total_packets
+- tcp_percentage, udp_percentage
+- protocol_distribution
+- top_source_ips, top_destination_ips
+- top_ports, flagged_ports
+- port_class_distribution
+- ip_scope_breakdown
+- multicast_packets, broadcast_packets
+- packet_size_stats
+- top_destination_pairs
+- drilldown (protocol-filtered datasets for UI)
 
-## Tech Stack
+## Sample PCAP Files
 
-- Python
-- FastAPI
-- Scapy
-- HTML/CSS/JavaScript
-- Chart.js
+This repository includes sample captures for quick testing:
 
-## Troubleshooting
+- `samples/sample-web-traffic.pcap`
+- `samples/sample-dns-traffic.pcap`
+- `samples/sample-mixed-alerts.pcap`
 
-- If `./run.sh` fails, ensure the backend virtual environment exists at `backend/venv`.
-- If changes do not appear in browser, hard refresh to clear cached static assets.
+Use any of these files with the Upload button in the dashboard.
+
+## Screenshots
+
+![Dashboard home](docs/images/dashboard-home.svg)
+
+![Dashboard report view](docs/images/dashboard-report-view.svg)

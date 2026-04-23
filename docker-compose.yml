@@ -1,0 +1,14 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pcap-analyzer:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - uploads_data:/app/backend/uploads
+    restart: unless-stopped
+
+volumes:
+  uploads_data:

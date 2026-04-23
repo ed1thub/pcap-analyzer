@@ -31,10 +31,15 @@ def root():
     return FileResponse(FRONTEND_DIR / "index.html")
 
 
+@app.get("/healthz")
+def healthz():
+    return {"status": "ok"}
+
+
 @app.post("/upload")
 def upload_pcap(file: UploadFile = File(...)):
-    if not file.filename.endswith(".pcap"):
-        raise HTTPException(status_code=400, detail="Only .pcap files are allowed")
+    if not (file.filename.endswith(".pcap") or file.filename.endswith(".pcapng")):
+        raise HTTPException(status_code=400, detail="Only .pcap or .pcapng files are allowed")
 
     file_path = os.path.join(UPLOAD_DIR, file.filename)
 

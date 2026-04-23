@@ -6,6 +6,7 @@
   <title>PCAP Analyzer</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -24,6 +25,28 @@
 
     <div id="status" class="status status-neutral" role="status" aria-live="polite">Ready for analysis.</div>
 
+    <div class="filters-box" id="filtersBox">
+      <div class="protocol-filter" role="group" aria-label="Protocol filter">
+        <button class="filter-btn active" data-protocol="ALL" type="button">All</button>
+        <button class="filter-btn" data-protocol="TCP" type="button">TCP</button>
+        <button class="filter-btn" data-protocol="UDP" type="button">UDP</button>
+      </div>
+      <div class="search-filter">
+        <label for="ipSearch">Search IP</label>
+        <input id="ipSearch" type="text" placeholder="e.g. 192.168.1.10" />
+      </div>
+      <label class="toggle-filter" for="showConversations">
+        <input id="showConversations" type="checkbox" checked />
+        Show top conversations
+      </label>
+    </div>
+
+    <div class="export-actions">
+      <button id="downloadJsonBtn" class="secondary-btn" type="button" disabled>Download JSON</button>
+      <button id="exportHtmlBtn" class="secondary-btn" type="button" disabled>Export HTML Report</button>
+      <button id="exportPdfBtn" class="secondary-btn" type="button" disabled>Export PDF Report</button>
+    </div>
+
     <div id="results" class="hidden">
       <div class="cards">
         <div class="card metric-card">
@@ -39,6 +62,28 @@
         <div class="card metric-card">
           <h3>UDP Share</h3>
           <p id="udpPercentage">0%</p>
+        </div>
+      </div>
+
+      <div class="cards cards-advanced">
+        <div class="card metric-card">
+          <h3>Internal -> External</h3>
+          <p id="internalToExternal">0</p>
+        </div>
+
+        <div class="card metric-card">
+          <h3>External -> Internal</h3>
+          <p id="externalToInternal">0</p>
+        </div>
+
+        <div class="card metric-card">
+          <h3>Multicast / Broadcast</h3>
+          <p id="multicastBroadcast">0 / 0</p>
+        </div>
+
+        <div class="card metric-card">
+          <h3>Avg / P95 Packet Size</h3>
+          <p id="packetSizeSummary">0 / 0 B</p>
         </div>
       </div>
 
@@ -103,6 +148,62 @@
               </tr>
             </thead>
             <tbody id="flaggedPortsTable"></tbody>
+          </table>
+        </div>
+
+        <div class="table-card" id="ipDrilldownCard">
+          <h3>IP Drill-Down</h3>
+          <p id="ipDrilldownTitle" class="table-helper">Click a top source or destination IP bar to inspect related ports.</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Port</th>
+                <th>Count</th>
+                <th>Service</th>
+              </tr>
+            </thead>
+            <tbody id="ipDrilldownTable"></tbody>
+          </table>
+        </div>
+
+        <div class="table-card" id="conversationsCard">
+          <h3>Top Conversations</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Source</th>
+                <th>Destination</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody id="conversationsTable"></tbody>
+          </table>
+        </div>
+
+        <div class="table-card" id="portClassCard">
+          <h3>Port Class Distribution</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody id="portClassTable"></tbody>
+          </table>
+        </div>
+
+        <div class="table-card" id="destinationPairsCard">
+          <h3>Top Destination Pairs</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Source</th>
+                <th>Destination</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody id="destinationPairsTable"></tbody>
           </table>
         </div>
       </div>
