@@ -163,6 +163,6 @@ Use any of these files with the Upload button in the dashboard.
 
 ## Screenshots
 
-![Dashboard home](docs/images/dashboard-home.svg)
+![Dashboard home](docs/images/dashboard-home.png)
 
-![Dashboard report view](docs/images/dashboard-report-view.svg)
+![Dashboard report view](docs/images/dashboard-report-view.png)
