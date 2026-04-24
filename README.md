@@ -2,6 +2,17 @@
 
 PCAP Analyzer is a deployable web application for packet-capture analysis. It provides a FastAPI backend, a browser dashboard, and export workflows for JSON, HTML, and PDF reports.
 
+## License
+
+This project is licensed under the MIT License. See LICENSE.
+
+## Community Docs
+
+- Contribution guide: CONTRIBUTING.md
+- Code of conduct: CODE_OF_CONDUCT.md
+- Security policy: SECURITY.md
+- Pull request template: .github/PULL_REQUEST_TEMPLATE.md
+
 ## Features
 
 - Upload .pcap and .pcapng captures
@@ -123,6 +134,12 @@ This repository includes a Render Blueprint file at `render.yaml`.
 - Health endpoint responds at `/healthz`
 - Upload path `backend/uploads` is writable at runtime
 - Test one upload in production after first deploy
+
+### Render Troubleshooting
+
+- If upload fails in the UI with a backend connection message, force-refresh the browser after deploy.
+- Verify `/healthz` is green in Render service health checks.
+- Confirm the deployed branch contains the latest frontend and backend changes.
 
 ## API
 
