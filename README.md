@@ -9,8 +9,6 @@ This project is licensed under the MIT License. See LICENSE.
 ## Community Docs
 
 - Contribution guide: CONTRIBUTING.md
-- Code of conduct: CODE_OF_CONDUCT.md
-- Security policy: SECURITY.md
 - Pull request template: .github/PULL_REQUEST_TEMPLATE.md
 
 ## Features
