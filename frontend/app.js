@@ -42,6 +42,15 @@ let selectedProtocol = "ALL";
 let selectedIp = null;
 
 const apiBaseUrl = "";
+const chartPalette = {
+  indigo: "#4f46e5",
+  violet: "#7c3aed",
+  emerald: "#10b981",
+  amber: "#f59e0b",
+  slate: "#64748b",
+  grid: "rgba(100, 116, 139, 0.18)",
+  text: "#475569"
+};
 
 uploadBtn.addEventListener("click", async () => {
   const file = fileInput.files[0];
@@ -618,7 +627,7 @@ function renderProtocolChart(data) {
       labels: data.map(item => item.protocol),
       datasets: [{
         data: data.map(item => item.count),
-        backgroundColor: ["#0f766e", "#0ea5e9", "#f59e0b", "#64748b"],
+        backgroundColor: [chartPalette.indigo, chartPalette.violet, chartPalette.emerald, chartPalette.amber, chartPalette.slate],
         borderColor: "#ffffff",
         borderWidth: 2
       }]
@@ -626,7 +635,14 @@ function renderProtocolChart(data) {
     options: {
       plugins: {
         legend: {
-          position: "bottom"
+          position: "bottom",
+          labels: {
+            color: chartPalette.text,
+            font: {
+              family: "'Plus Jakarta Sans', sans-serif",
+              weight: "700"
+            }
+          }
         }
       }
     }
@@ -645,7 +661,8 @@ function renderSourceIpChart(data) {
       datasets: [{
         label: "Packets",
         data: data.map(item => item.count),
-        backgroundColor: "#0ea5e9"
+        backgroundColor: chartPalette.indigo,
+        borderRadius: 6
       }]
     },
     options: {
@@ -664,7 +681,21 @@ function renderSourceIpChart(data) {
       },
       scales: {
         y: {
-          beginAtZero: true
+          beginAtZero: true,
+          grid: {
+            color: chartPalette.grid
+          },
+          ticks: {
+            color: chartPalette.text
+          }
+        },
+        x: {
+          grid: {
+            color: chartPalette.grid
+          },
+          ticks: {
+            color: chartPalette.text
+          }
         }
       }
     }
@@ -683,7 +714,8 @@ function renderDestinationIpChart(data) {
       datasets: [{
         label: "Packets",
         data: data.map(item => item.count),
-        backgroundColor: "#14b8a6"
+        backgroundColor: chartPalette.violet,
+        borderRadius: 6
       }]
     },
     options: {
@@ -702,7 +734,21 @@ function renderDestinationIpChart(data) {
       },
       scales: {
         y: {
-          beginAtZero: true
+          beginAtZero: true,
+          grid: {
+            color: chartPalette.grid
+          },
+          ticks: {
+            color: chartPalette.text
+          }
+        },
+        x: {
+          grid: {
+            color: chartPalette.grid
+          },
+          ticks: {
+            color: chartPalette.text
+          }
         }
       }
     }

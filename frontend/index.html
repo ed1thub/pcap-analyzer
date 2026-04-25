@@ -9,43 +9,45 @@
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
-  <div class="container">
-    <div class="hero">
+  <main class="container">
+    <header class="hero">
       <div>
-        <h1>PCAP Analyzer</h1>
+        <h1>PCAP <span>Analyzer</span></h1>
         <p class="subtitle">Upload a PCAP capture and get a fast, analyst-friendly traffic summary.</p>
       </div>
       <span class="app-tag">Network Forensics</span>
-    </div>
+    </header>
 
-    <div class="upload-box">
-      <input type="file" id="pcapFile" accept=".pcap,.pcapng" />
-      <button id="uploadBtn">Analyze Capture</button>
-    </div>
-
-    <div id="status" class="status status-neutral" role="status" aria-live="polite">Ready for analysis.</div>
-
-    <div class="filters-box" id="filtersBox">
-      <div class="protocol-filter" role="group" aria-label="Protocol filter">
-        <button class="filter-btn active" data-protocol="ALL" type="button">All</button>
-        <button class="filter-btn" data-protocol="TCP" type="button">TCP</button>
-        <button class="filter-btn" data-protocol="UDP" type="button">UDP</button>
+    <section class="control-panel" aria-label="Capture analysis controls">
+      <div class="upload-box">
+        <input type="file" id="pcapFile" accept=".pcap,.pcapng" />
+        <button id="uploadBtn" type="button">Analyze Capture</button>
       </div>
-      <div class="search-filter">
-        <label for="ipSearch">Search IP</label>
-        <input id="ipSearch" type="text" placeholder="e.g. 192.168.1.10" />
-      </div>
-      <label class="toggle-filter" for="showConversations">
-        <input id="showConversations" type="checkbox" checked />
-        Show top conversations
-      </label>
-    </div>
 
-    <div class="export-actions">
-      <button id="downloadJsonBtn" class="secondary-btn" type="button" disabled>Download JSON</button>
-      <button id="exportHtmlBtn" class="secondary-btn" type="button" disabled>Export HTML Report</button>
-      <button id="exportPdfBtn" class="secondary-btn" type="button" disabled>Export PDF Report</button>
-    </div>
+      <div id="status" class="status status-neutral" role="status" aria-live="polite">Ready for analysis.</div>
+
+      <div class="filters-box" id="filtersBox">
+        <div class="protocol-filter" role="group" aria-label="Protocol filter">
+          <button class="filter-btn active" data-protocol="ALL" type="button">All</button>
+          <button class="filter-btn" data-protocol="TCP" type="button">TCP</button>
+          <button class="filter-btn" data-protocol="UDP" type="button">UDP</button>
+        </div>
+        <div class="search-filter">
+          <label for="ipSearch">Search IP</label>
+          <input id="ipSearch" type="text" placeholder="e.g. 192.168.1.10" />
+        </div>
+        <label class="toggle-filter" for="showConversations">
+          <input id="showConversations" type="checkbox" checked />
+          Show top conversations
+        </label>
+      </div>
+
+      <div class="export-actions">
+        <button id="downloadJsonBtn" class="secondary-btn" type="button" disabled>Download JSON</button>
+        <button id="exportHtmlBtn" class="secondary-btn" type="button" disabled>Export HTML Report</button>
+        <button id="exportPdfBtn" class="secondary-btn" type="button" disabled>Export PDF Report</button>
+      </div>
+    </section>
 
     <div id="results" class="hidden">
       <div class="cards">
@@ -208,7 +210,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </main>
 
   <script src="app.js"></script>
 </body>
